@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اكتب أسرع | تعلّم الطباعة</title>
+<style>
+:root{--bg:#0b1020;--panel:#151d33;--panel2:#1d2945;--text:#f4f7ff;--muted:#a9b5d0;--accent:#7c9cff;--good:#48d6a0;--bad:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#1d2b50 0,transparent 36%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+header{padding:24px 7%;display:flex;justify-content:space-between;align-items:center;gap:12px}.logo{font-size:1.25rem;font-weight:800}.logo span{color:var(--accent)}.tag{color:var(--muted);font-size:.9rem}.header-actions{display:flex;align-items:center;gap:10px}.user-name{color:var(--good);font-size:.9rem}
+.login-modal{display:none;position:fixed;inset:0;background:#050914cc;z-index:10;align-items:center;justify-content:center;padding:18px}.login-card{width:min(390px,100%);background:var(--panel);border:1px solid #3a496c;border-radius:20px;padding:24px;box-shadow:0 20px 70px #0008}.login-card h2{margin-top:0}.login-card input{width:100%;padding:13px;border-radius:10px;border:1px solid #3a496c;background:#0e1628;color:var(--text);font:inherit;margin:10px 0 15px}.login-actions{display:flex;gap:8px;flex-wrap:wrap}.login-note{color:var(--muted);font-size:.82rem;line-height:1.6}
+main{width:min(980px,92%);margin:30px auto 70px}.hero{text-align:center;margin-bottom:30px}.creator-credit{color:var(--muted);font-size:.9rem;font-weight:600;letter-spacing:.5px;margin:0 0 14px;text-align:center;direction:ltr}.hero h1{font-size:clamp(2rem,5vw,3.3rem);margin:8px 0}.hero h1 span{color:var(--accent)}.hero p{color:var(--muted);line-height:1.8;margin:0}
+.panel{background:rgba(21,29,51,.94);border:1px solid #2b3857;border-radius:22px;padding:clamp(18px,4vw,30px);box-shadow:0 18px 55px #0004}
+.controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.group{display:flex;gap:8px;flex-wrap:wrap}
+button,select{font:inherit;border:1px solid #3a496c;background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 15px;cursor:pointer}
+button.active,button.primary{background:var(--accent);color:#091127;border-color:var(--accent);font-weight:700}button:hover{filter:brightness(1.12)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}.stat{background:#10182b;border-radius:15px;padding:14px;text-align:center}.stat small{display:block;color:var(--muted);margin-bottom:7px}.stat strong{font-size:1.6rem;font-variant-numeric:tabular-nums}
+.prompt{background:#10182b;border:1px solid #2b3857;border-radius:15px;padding:20px;min-height:118px;font-size:1.3rem;line-height:2.1;direction:auto;unicode-bidi:plaintext;margin-bottom:14px;word-break:break-word}
+.prompt span.correct{color:var(--good)}.prompt span.wrong{color:var(--bad);background:#ff718522;border-radius:3px}.prompt span.current{border-bottom:3px solid var(--accent)}
+textarea{width:100%;min-height:120px;resize:vertical;background:#0e1628;border:1px solid #3a496c;border-radius:15px;color:var(--text);font:1.15rem/2 Tahoma,Arial,sans-serif;padding:15px;outline:none;direction:auto}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px #7c9cff22}textarea:disabled{opacity:.7}
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.hint{color:var(--muted);font-size:.88rem}
+.result{display:none;text-align:center;margin-top:20px;background:#10182b;border-radius:15px;padding:20px}.result h2{margin-top:0}.result p{color:var(--muted);line-height:1.8}
+footer{text-align:center;color:#8290ae;padding:25px;font-size:.85rem}
+@media(max-width:600px){header{padding:18px 5%}.tag{display:none}.stats{gap:7px}.stat{padding:12px 5px}.stat strong{font-size:1.3rem}.prompt{font-size:1.12rem}}
+</style>
+</head>
+<body>
+<header><div class="logo">⌨️ اكتب <span>أسرع</span></div><div class="header-actions"><div class="tag">تدرّب كل يوم… واكتب بثقة</div><span class="user-name" id="userName"></span><button id="loginOpen">تسجيل الدخول</button></div></header>
+<main>
+<section class="hero"><div class="creator-credit" dir="ltr">Created by Hesham Ibrahim</div><h1>خلّي كتابتك <span>أسرع وأسهل</span></h1><p>اختبر سرعتك، تابع دقتك، وطوّر مهارتك في الكتابة على الكيبورد خطوة بخطوة.</p></section>
+<section class="panel">
+ <div class="controls">
+  <div class="group"><button class="active" data-lang="ar">العربية</button><button data-lang="en">English</button></div>
+  <div class="group"><label for="level" style="align-self:center;color:var(--muted)">المستوى:</label><select id="level"><option value="beginner">مبتدئ</option><option value="intermediate">متوسط</option><option value="advanced">متقدم</option></select></div>
+  <div class="group"><label for="duration" style="align-self:center;color:var(--muted)">المدة:</label><select id="duration"><option value="30">30 ثانية</option><option value="60" selected>60 ثانية</option><option value="120">دقيقتان</option></select></div>
+ </div>
+ <div class="stats">
+  <div class="stat"><small>الوقت المتبقي</small><strong id="time">60</strong></div>
+  <div class="stat"><small>السرعة (كلمة/دقيقة)</small><strong id="wpm">0</strong></div>
+  <div class="stat"><small>الدقة</small><strong id="accuracy">100%</strong></div>
+ </div>
+ <div class="prompt" id="prompt" aria-label="النص المطلوب كتابته"></div>
+ <textarea id="typing" placeholder="اضغط هنا وابدأ الكتابة…" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+ <div class="actions"><span class="hint">يبدأ الوقت تلقائياً عند أول حرف تكتبه.</span><button class="primary" id="reset">ابدأ من جديد ↻</button></div>
+ <div class="result" id="result"><h2>أحسنت! انتهى التحدي 🎉</h2><p id="summary"></p><button class="primary" id="again">جرّب مرة أخرى</button></div>
+</section>
+</main>
+<footer>تدرّب لمدة قصيرة كل يوم، وستلاحظ تطوّرك مع الوقت.<br><span dir="ltr">Created by Hesham Ibrahim</span></footer>
+<div class="login-modal" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+ <div class="login-card">
+  <h2 id="loginTitle">تسجيل الدخول</h2>
+  <p style="color:var(--muted)">اكتب اسمك ليظهر في الموقع.</p>
+  <input id="nameInput" type="text" maxlength="30" placeholder="اكتب اسمك هنا" autocomplete="name">
+  <div class="login-actions"><button class="primary" id="saveName">دخول</button><button id="loginClose">إلغاء</button></div>
+  <p class="login-note">هذه خاصية تعريف بالاسم على هذا الجهاز فقط وليست حسابا محميا بكلمة مرور.</p>
+ </div>
+</div>
+<script>
+const texts={
+ ar:{
+  beginner:[
+   "أنا أحب تعلم مهارات جديدة كل يوم",
+   "أكتب بهدوء وأركز على كل حرف",
+   "التدريب اليومي يجعلني أفضل",
+   "أتعلم الكتابة بسرعة خطوة خطوة"
+  ],
+  intermediate:[
+   "الكتابة السريعة مهارة تتحسن مع التدريب المنتظم والتركيز الجيد",
+   "اجلس بطريقة مريحة وضع أصابعك على لوحة المفاتيح وابدأ بهدوء",
+   "خصص وقتا للتعلم كل يوم وحاول أن تزيد سرعتك مع الحفاظ على الدقة",
+   "كل محاولة جديدة تساعدك على اكتساب خبرة وتحقيق تقدم أفضل"
+  ],
+  advanced:[
+   "الاستمرار في التدريب مع الانتباه إلى مواضع الحروف يساعد على تحسين السرعة والدقة",
+   "عندما تتدرب بانتظام تصبح الكتابة أكثر سهولة وتتمكن من إنجاز مهامك في وقت أقل",
+   "تعلم استخدام جميع الأصابع بطريقة صحيحة يمنحك تحكما أفضل في لوحة المفاتيح"
+  ]
+ },
+ en:{
+  beginner:[
+   "I like to learn new skills every day",
+   "I type slowly and focus on each letter",
+   "Daily practice makes me better",
+   "I can learn to type faster step by step"
+  ],
+  intermediate:[
+   "Typing speed improves with regular practice and good focus",
+   "Sit comfortably and place your fingers on the keyboard",
+   "Practice every day and try to improve your speed and accuracy",
+   "Every new attempt helps you gain skill and confidence"
+  ],
+  advanced:[
+   "Consistent practice and attention to each letter can improve both speed and accuracy",
+   "When you train regularly typing becomes easier and everyday tasks take less time",
+   "Learning to use every finger correctly gives you better control of the keyboard"
+  ]
+ }
+};
+let lang="ar",level="beginner",text="",started=false,finished=false,remaining=60,timer=null;
+const input=document.getElementById("typing"),promptBox=document.getElementById("prompt"),duration=document.getElementById("duration"),levelSelect=document.getElementById("level");
+const loginModal=document.getElementById("loginModal"),nameInput=document.getElementById("nameInput"),userName=document.getElementById("userName");
+function showSavedName(){const saved=localStorage.getItem("typingUserName");if(saved){userName.textContent="أهلا "+saved;document.getElementById("loginOpen").textContent="تغيير الاسم";}}
+document.getElementById("loginOpen").addEventListener("click",()=>{nameInput.value=localStorage.getItem("typingUserName")||"";loginModal.style.display="flex";nameInput.focus();});
+document.getElementById("loginClose").addEventListener("click",()=>loginModal.style.display="none");
+document.getElementById("saveName").addEventListener("click",()=>{const name=nameInput.value.trim();if(!name){nameInput.focus();return;}localStorage.setItem("typingUserName",name);showSavedName();loginModal.style.display="none";});
+loginModal.addEventListener("click",e=>{if(e.target===loginModal)loginModal.style.display="none";});
+showSavedName();
+const timeEl=document.getElementById("time"),wpmEl=document.getElementById("wpm"),accEl=document.getElementById("accuracy"),result=document.getElementById("result");
+function chooseText(){const arr=texts[lang][level];return arr[Math.floor(Math.random()*arr.length)];}
+function render(){const typed=input.value;promptBox.innerHTML="";[...text].forEach((ch,i)=>{const s=document.createElement("span");s.textContent=ch;if(i<typed.length)s.className=typed[i]===ch?"correct":"wrong";else if(i===typed.length)s.className="current";promptBox.appendChild(s);});}
+function stats(){const typed=input.value;let correct=0;for(let i=0;i<typed.length;i++)if(typed[i]===text[i])correct++;const elapsed=Number(duration.value)-remaining;const minutes=Math.max(elapsed/60,1/60);wpmEl.textContent=Math.round((correct/5)/minutes);accEl.textContent=(typed.length?Math.round(correct/typed.length*100):100)+"%";}
+function start(){if(started||finished)return;started=true;timer=setInterval(()=>{remaining--;timeEl.textContent=remaining;stats();if(remaining<=0)end();},1000);}
+function end(){finished=true;clearInterval(timer);input.disabled=true;stats();const typed=input.value;let correct=0;for(let i=0;i<typed.length;i++)if(typed[i]===text[i])correct++;const elapsed=Number(duration.value)-remaining;const speed=Math.round((correct/5)/(Math.max(elapsed,1)/60));document.getElementById("summary").textContent=`سرعتك: ${speed} كلمة في الدقيقة — الدقة: ${typed.length?Math.round(correct/typed.length*100):100}%. استمر في التدريب لتحسين نتيجتك.`;result.style.display="block";}
+function reset(){clearInterval(timer);started=false;finished=false;remaining=Number(duration.value);timeEl.textContent=remaining;wpmEl.textContent="0";accEl.textContent="100%";text=chooseText();input.value="";input.disabled=false;result.style.display="none";render();input.focus();}
+input.addEventListener("input",()=>{if(!started)start();render();stats();if(input.value.length>=text.length)end();});
+document.getElementById("reset").addEventListener("click",reset);document.getElementById("again").addEventListener("click",reset);
+duration.addEventListener("change",reset);
+levelSelect.addEventListener("change",()=>{level=levelSelect.value;reset();});
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.lang;document.querySelectorAll("[data-lang]").forEach(x=>x.classList.toggle("active",x===b));reset();}));
+reset();
+</script>
+</body></html>
